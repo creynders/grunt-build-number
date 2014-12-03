@@ -1,6 +1,6 @@
 # grunt-build-number
 
-> Grunt plugin for maintaining a build number in package.json
+> Grunt plugin for maintaining a build number in package.json (or another file)
 
 ## Getting Started
 This plugin requires Grunt.
@@ -24,7 +24,7 @@ In your project's Gruntfile, add a section named `build_number` to the data obje
 
 ```js
 grunt.initConfig({
-  build_number: {
+  buildnumber: {
     options: {
       // Task-specific options go here.
     },
@@ -35,58 +35,63 @@ grunt.initConfig({
 })
 ```
 
+(due to how grunt handles tasks this **`buildnumber` object has to be present in the grunt configuration and has to have at least one target defined**, even when using the default options. Just leave the object empty, e.g. `buildnumber: { package:{} }`)
+
 ### Options
 
-#### options.separator
+#### options.field
 Type: `String`
-Default value: `',  '`
+Default value: `build`
 
-A string value that is used to do something with whatever.
-
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
-
-A string value that is used to do something else with whatever else.
+A string value that is used as the name of the field in the json file to store the build number.
 
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
 
 ```js
+//Gruntfile.js
 grunt.initConfig({
-  build_number: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
+  buildnumber: {
+    package : {}
+  }
 })
+```
+
+```sh
+$ grunt buildnumber
+```
+
+The task will search for the `package.json` file in your project, load it and bump/create the `build` field. Output will be similar to:
+
+```sh
+Running "buildnumber:package" (buildnumber) task
+>> Build number set to "463" in "package.json".
+
+Done, without errors.
 ```
 
 #### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
 
 ```js
 grunt.initConfig({
-  build_number: {
+  buildnumber: {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
+      field: 'buildnum',
     },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
+    files: ['package.json', 'bower.json']
+  }
 })
 ```
 
+This will update a `buildnum` field inside `package.json` and `bower.json`.
+
 ## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+In lieu of a formal styleguide, take care to maintain the existing coding style. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+
+* v1.0.0: initial release
 
 ## License
 Copyright (c) 2014 Camille Reynders. Licensed under the MIT license.
